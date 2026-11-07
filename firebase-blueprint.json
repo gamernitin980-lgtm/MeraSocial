@@ -1,0 +1,130 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile and account settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Firebase Auth user UID" },
+        "email": { "type": "string", "description": "User account email" },
+        "username": { "type": "string", "description": "Unique username handle" },
+        "fullName": { "type": "string", "description": "Display full name" },
+        "avatar": { "type": "string", "description": "Profile picture URL or SVG data URI" },
+        "bio": { "type": "string", "description": "Account biography" },
+        "website": { "type": "string", "description": "Website URL" },
+        "followersCount": { "type": "number", "description": "Number of followers" },
+        "followingCount": { "type": "number", "description": "Number of following users" },
+        "postsCount": { "type": "number", "description": "Number of posts" },
+        "isVerified": { "type": "boolean", "description": "Verification badge" },
+        "isPrivate": { "type": "boolean", "description": "Private account toggle" },
+        "following": { "type": "array", "description": "List of followed user IDs" },
+        "createdAt": { "type": "string", "description": "Account creation timestamp" }
+      },
+      "required": ["id", "username", "fullName"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Social feed photo or video post",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique post ID" },
+        "userId": { "type": "string", "description": "Author UID" },
+        "mediaType": { "type": "string", "description": "Media type (image or video)" },
+        "images": { "type": "array", "description": "Media URLs" },
+        "caption": { "type": "string", "description": "Post caption with hashtags", "maxLength": 2200 },
+        "location": { "type": "string", "description": "Location name" },
+        "likesCount": { "type": "number", "description": "Total like count" },
+        "likedBy": { "type": "array", "description": "User IDs who liked" },
+        "savedBy": { "type": "array", "description": "User IDs who saved" },
+        "tags": { "type": "array", "description": "Extracted hashtags" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "filterClass": { "type": "string", "description": "CSS filter class" }
+      },
+      "required": ["id", "userId", "caption", "likesCount"]
+    },
+    "Story": {
+      "title": "Story",
+      "description": "24-hour temporary visual story",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique story ID" },
+        "userId": { "type": "string", "description": "Author UID" },
+        "mediaUrl": { "type": "string", "description": "Story media URL" },
+        "mediaType": { "type": "string", "description": "image or video" },
+        "caption": { "type": "string", "description": "Story caption" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "expiresAt": { "type": "number", "description": "Expiration epoch timestamp (24h)" },
+        "viewedBy": { "type": "array", "description": "User IDs who viewed" }
+      },
+      "required": ["id", "userId", "mediaUrl", "createdAt"]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "One-to-one direct message channel",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique conversation ID" },
+        "participants": { "type": "array", "description": "List of user UIDs in conversation" },
+        "lastMessage": { "type": "string", "description": "Last sent message preview" },
+        "lastMessageTime": { "type": "string", "description": "Timestamp of last message" },
+        "updatedAt": { "type": "number", "description": "Update epoch time" }
+      },
+      "required": ["id", "participants"]
+    },
+    "DirectMessage": {
+      "title": "DirectMessage",
+      "description": "Individual message within a conversation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Message ID" },
+        "conversationId": { "type": "string", "description": "Parent conversation ID" },
+        "senderId": { "type": "string", "description": "Author UID" },
+        "text": { "type": "string", "description": "Message body", "maxLength": 2000 },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "isRead": { "type": "boolean", "description": "Read status" }
+      },
+      "required": ["id", "conversationId", "senderId", "text"]
+    },
+    "NotificationItem": {
+      "title": "NotificationItem",
+      "description": "In-app notification for likes, comments, and follows",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Notification ID" },
+        "recipientId": { "type": "string", "description": "Target recipient UID" },
+        "senderId": { "type": "string", "description": "Initiator UID" },
+        "type": { "type": "string", "description": "like, comment, or follow" },
+        "text": { "type": "string", "description": "Notification description" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "isRead": { "type": "boolean", "description": "Read status" }
+      },
+      "required": ["id", "recipientId", "senderId", "type", "text"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles and account settings"
+    },
+    "/posts/{postId}": {
+      "schema": "Post",
+      "description": "Permanent feed photo and video posts"
+    },
+    "/stories/{storyId}": {
+      "schema": "Story",
+      "description": "Temporary 24h stories"
+    },
+    "/conversations/{conversationId}": {
+      "schema": "Conversation",
+      "description": "Direct message threads between users"
+    },
+    "/conversations/{conversationId}/messages/{messageId}": {
+      "schema": "DirectMessage",
+      "description": "Private messages inside a conversation"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "NotificationItem",
+      "description": "User notifications"
+    }
+  }
+}

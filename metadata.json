@@ -1,0 +1,6 @@
+{
+  "name": "MeraSocial",
+  "description": "Modern mobile-first social media app with stories, interactive feed, likes, comments, profiles, search and explore, and post creation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
