@@ -1,17 +1,16 @@
-name: Build MeraSocial APK
+name: MeraSocial Build
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get source code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -19,35 +18,8 @@ jobs:
         with:
           node-version: 22
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
-      - name: Install dependencies
+      - name: Install
         run: npm install
 
-      - name: Build website
+      - name: Build
         run: npm run build
-
-      - name: Setup Capacitor
-        run: |
-          npm install @capacitor/core @capacitor/android
-          npm install -D @capacitor/cli
-          npx cap init MeraSocial com.nitin.merasocial --web-dir=dist
-          npx cap add android
-
-      - name: Build APK
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
-
-      - name: Save APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: MeraSocial-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
-
-          
